@@ -8,27 +8,28 @@
 
 ```
 BulletinBoard/
-├── public/                  # 靜態資源
-├── src/
-│   ├── components/
-│   │   ├── BoardShell.tsx   # 佈告欄主體（含主題切換）
-│   │   ├── Composer.tsx     # 張貼公告表單
-│   │   └── PostCard.tsx     # 公告卡片
-│   ├── data/
-│   │   ├── initialPosts.ts  # 預設示範公告資料
-│   │   └── themes.ts        # 主題設定（名稱、CSS class）
-│   ├── types/
-│   │   └── index.ts         # TypeScript 型別定義
-│   ├── App.tsx              # 根元件
-│   ├── App.css              # 全域樣式（含主題 CSS）
-│   ├── main.tsx             # 進入點
-│   └── index.css            # Body 基礎樣式
-├── index.html               # HTML 入口
-├── vite.config.ts           # Vite 設定（含 GitHub Pages base）
-├── tsconfig.json
-├── tsconfig.app.json
-├── tsconfig.node.json
-├── package.json
+├── frontend/                # 前端專案
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── BoardShell.tsx   # 佈告欄主體（含主題切換）
+│   │   │   ├── Composer.tsx     # 張貼公告表單
+│   │   │   └── PostCard.tsx     # 公告卡片
+│   │   ├── data/
+│   │   │   ├── initialPosts.ts  # 預設示範公告資料
+│   │   │   └── themes.ts        # 主題設定（名稱、CSS class）
+│   │   ├── types/
+│   │   │   └── index.ts         # TypeScript 型別定義
+│   │   ├── App.tsx              # 根元件
+│   │   ├── App.css              # 全域樣式（含主題 CSS）
+│   │   ├── main.tsx             # 進入點
+│   │   └── index.css            # Body 基礎樣式
+│   ├── index.html               # HTML 入口
+│   ├── vite.config.ts           # Vite 設定
+│   ├── tsconfig.json
+│   ├── tsconfig.app.json
+│   ├── tsconfig.node.json
+│   └── package.json
+├── README.md
 └── .gitignore
 ```
 
@@ -37,6 +38,9 @@ BulletinBoard/
 ## 指令
 
 ```bash
+# 進入前端資料夾
+cd frontend
+
 # 安裝相依套件
 npm install
 
@@ -61,7 +65,7 @@ npm run deploy
 dist/
 ```
 
-執行 `npm run build` 後，所有靜態檔案會輸出至專案根目錄下的 `dist/` 資料夾。
+執行 `npm run build` 後，所有靜態檔案會輸出至 `frontend/dist/`。
 
 ---
 
