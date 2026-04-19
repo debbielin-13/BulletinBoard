@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Post } from '../types'
+import { createPost } from '../api'
 
 interface Props {
   onPublish: (post: Post) => void
@@ -10,22 +11,34 @@ export default function Composer({ onPublish }: Props) {
   const [title, setTitle] = useState('')
   const [message, setMessage] = useState('')
   const [author, setAuthor] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  function handlePublish() {
+  async function handlePublish() {
     if (!title.trim() || !message.trim() || !author.trim()) {
       alert('請把文字、訊息、發布人都填寫完整。')
       return
     }
-    onPublish({
-      title: title.trim(),
-      message: message.trim(),
-      author: author.trim(),
-      time: new Date().toLocaleString('zh-TW'),
-    })
-    setTitle('')
-    setMessage('')
-    setAuthor('')
-    setOpen(false)
+
+    setLoading(true)
+    setError(null)
+
+    try {
+      const post = await createPost({
+        title: title.trim(),
+        message: message.trim(),
+        author: author.trim(),
+      })
+      onPublish(post)
+      setTitle('')
+      setMessage('')
+      setAuthor('')
+      setOpen(false)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '發布失敗，請稍後再試')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -73,9 +86,15 @@ export default function Composer({ onPublish }: Props) {
                 onChange={e => setAuthor(e.target.value)}
               />
             </div>
-            <button className="publish-btn" type="button" onClick={handlePublish}>
-              發布公告
+            <button
+              className="publish-btn"
+              type="button"
+              onClick={handlePublish}
+              disabled={loading}
+            >
+              {loading ? '發布中…' : '發布公告'}
             </button>
+            {error && <p className="hint" style={{ color: 'red' }}>{error}</p>}
             <p className="hint">
               建議先填標題，再補內容。<br />
               發布後會自動成為最新公告。
