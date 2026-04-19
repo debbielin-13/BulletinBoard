@@ -85,9 +85,141 @@ clasp open
 |------|------|------|
 | `GET ?action=latest` | — | 取得最新公告（第一筆） |
 | `GET ?action=history` | — | 取得歷史訊息（第二筆之後） |
+| `GET ?action=count` | — | 取得公告總數 |
+| `GET ?action=search&q=關鍵字` | `q` | 搜尋標題或內容 |
 | `POST` | `{ title, message, author }` | 發布新公告 |
 
-### Google Sheets 格式
+---
+
+Base URL 範例：
+```
+https://script.google.com/macros/s/{SCRIPT_ID}/exec
+```
+
+---
+
+### GET `?action=latest` — 最新公告
+
+回傳第一筆公告。
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid-xxxx",
+    "title": "影印機維護通知",
+    "message": "本週五下午 3 點到 5 點，影印機將進行保養。",
+    "author": "行政組",
+    "time": "2026/4/19 上午 10:00:00"
+  }
+}
+```
+
+無公告時 `data` 為 `null`。
+
+---
+
+### GET `?action=history` — 歷史訊息
+
+回傳第二筆之後的所有公告（陣列）。
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid-yyyy",
+      "title": "茶水間清潔提醒",
+      "message": "請於離開前帶走個人物品。",
+      "author": "總務組",
+      "time": "2026/4/16 上午 10:00:00"
+    }
+  ]
+}
+```
+
+---
+
+### GET `?action=count` — 公告總數
+
+```json
+{
+  "success": true,
+  "data": { "count": 3 }
+}
+```
+
+---
+
+### GET `?action=search&q=關鍵字` — 搜尋公告
+
+搜尋 `title` 或 `message` 包含關鍵字的公告（不分大小寫）。
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid-xxxx",
+      "title": "影印機維護通知",
+      "message": "本週五下午 3 點到 5 點，影印機將進行保養。",
+      "author": "行政組",
+      "time": "2026/4/19 上午 10:00:00"
+    }
+  ]
+}
+```
+
+未提供 `q` 時回傳錯誤：
+```json
+{ "success": false, "error": "請提供搜尋關鍵字 ?q=..." }
+```
+
+---
+
+### POST — 發布新公告
+
+Request body（JSON）：
+
+```json
+{
+  "title": "停車場施工通知",
+  "message": "本週三起停車場封閉施工，請改停路邊。",
+  "author": "總務組"
+}
+```
+
+成功回傳：
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid-zzzz",
+    "title": "停車場施工通知",
+    "message": "本週三起停車場封閉施工，請改停路邊。",
+    "author": "總務組",
+    "time": "2026/4/19 下午 02:30:00"
+  }
+}
+```
+
+缺少欄位時回傳錯誤：
+```json
+{ "success": false, "error": "缺少必要欄位：title、message、author" }
+```
+
+---
+
+### 錯誤格式（通用）
+
+```json
+{ "success": false, "error": "錯誤原因說明" }
+```
+
+---
+
+## Google Sheets 格式
 
 工作表名稱需為 `posts`，欄位順序：
 
