@@ -16,6 +16,9 @@ dist-ssr
 # Claude Code
 .claude/
 
+# Clasp（含個人 scriptId，不進 repo）
+.clasp.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
