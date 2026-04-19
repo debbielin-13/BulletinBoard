@@ -7,9 +7,11 @@
 ```
 backend/
 ├── src/
-│   └── main.gs              # API 主程式（doGet / doPost）
-├── appsscript.json          # GAS 設定（時區、runtime、Web App 權限）
-└── .clasp.json.example      # clasp 設定範本（複製後填入 scriptId）
+│   ├── appsscript.json    # GAS 設定（時區、runtime、Web App 權限）
+│   ├── Main.gs            # 入口 + 路由（少動）
+│   ├── Posts.gs           # ★ 公告 API（新增功能在這裡）
+│   └── Database.gs        # Sheets 讀寫（少動）
+└── .clasp.json.example    # clasp 設定範本（複製後填入 scriptId）
 ```
 
 ## 前置準備
@@ -20,7 +22,11 @@ backend/
 npm install -g @google/clasp
 ```
 
-### 2. 登入 Google 帳號
+### 2. 啟用 Apps Script API
+
+前往 [script.google.com/home/usersettings](https://script.google.com/home/usersettings)，開啟「Google Apps Script API」。
+
+### 3. 登入 Google 帳號
 
 ```bash
 clasp login
@@ -28,12 +34,15 @@ clasp login
 
 執行後會開啟瀏覽器要求授權，完成後授權資訊存於 `~/.clasp.json`。
 
-### 3. 在 Google Apps Script 建立專案並取得 scriptId
+### 4. 建立 GAS 專案並取得 scriptId
 
-1. 前往 [script.google.com](https://script.google.com)，點「新增專案」
-2. 進入「專案設定」，複製「指令碼 ID（Script ID）」
+1. 開啟 Google Sheets，建立新的試算表
+2. 將工作表（左下角 tab）改名為 `posts`
+3. 第一列填入標題：`id` `title` `message` `author` `time`
+4. 上方選單「擴充功能」→「Apps Script」，進入綁定的 GAS 專案
+5. 左側齒輪「專案設定」→ 複製「指令碼 ID」
 
-### 4. 設定 .clasp.json
+### 5. 設定 .clasp.json
 
 ```bash
 cp .clasp.json.example .clasp.json
@@ -46,25 +55,37 @@ cp .clasp.json.example .clasp.json
 # 推送程式碼到 GAS 雲端
 clasp push
 
-# 在瀏覽器開啟 GAS 編輯器（可在此手動部署為 Web App）
+# 在瀏覽器開啟 GAS 編輯器
 clasp open
 ```
 
-### 部署為 Web App
+### 部署為 Web App 並取得 Endpoint
 
 在 GAS 編輯器中：
 
 1. 右上角「部署」→「新增部署」
 2. 類型選「網路應用程式」
 3. 執行身分：**我**；存取權：**所有人**
-4. 複製產生的 Web App 網址，貼到前端的 API 設定
+4. 按下「部署」，複製產生的網址 → 這就是你的 API endpoint
+
+### 測試網址 vs 正式網址
+
+| | 測試網址（`/dev`） | 正式網址（`/exec`） |
+|---|---|---|
+| 每次 `clasp push` 後 | 立即生效 | 需重新部署才更新 |
+| 存取限制 | 僅部署者本人（需登入） | 所有人皆可存取 |
+| 取得方式 | 「部署」→「測試部署」 | 「部署」→「管理部署」→ 複製網址 |
+| 適合 | 自己開發測試 | 給他人使用 |
+
+**教學建議：** 講師先部署一個正式版供全班共用，讓同仁先串接成功。之後同仁各自建立自己的 GAS 專案，再用測試網址開發。
 
 ## API 說明
 
-| 方法 | 說明 |
-|------|------|
-| `GET /` | 取得所有公告，回傳 JSON 陣列 |
-| `POST /` | 新增公告，Body 需含 `title`、`message`、`author` |
+| 方法 | 參數 | 說明 |
+|------|------|------|
+| `GET ?action=latest` | — | 取得最新公告（第一筆） |
+| `GET ?action=history` | — | 取得歷史訊息（第二筆之後） |
+| `POST` | `{ title, message, author }` | 發布新公告 |
 
 ### Google Sheets 格式
 
