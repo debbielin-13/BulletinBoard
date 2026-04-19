@@ -5,6 +5,8 @@
 var GET_ROUTES = {
   "latest":  getLatestPost,
   "history": getHistory,
+  "count":   getCount,
+  "search":  searchPosts,
 };
 
 function doGet(e) {

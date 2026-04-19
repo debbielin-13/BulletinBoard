@@ -27,6 +27,29 @@ function getHistory() {
   return respond({ success: true, data: posts.slice(1) });
 }
 
+// ── GET: 公告總數 ──────────────────────────────────────────
+
+function getCount() {
+  var posts = getAllPosts();
+  return respond({ success: true, data: { count: posts.length } });
+}
+
+// ── GET: 搜尋公告 ──────────────────────────────────────────
+
+function searchPosts(e) {
+  var q = (e.parameter.q || "").toLowerCase();
+  if (!q) {
+    return respond({ success: false, error: "請提供搜尋關鍵字 ?q=..." });
+  }
+
+  var results = getAllPosts().filter(function(post) {
+    return post.title.toLowerCase().indexOf(q) !== -1 ||
+           post.message.toLowerCase().indexOf(q) !== -1;
+  });
+
+  return respond({ success: true, data: results });
+}
+
 // ── POST: 發布新公告 ───────────────────────────────────────
 
 function createPost(e) {

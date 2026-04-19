@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // ★ 同仁填自己的 GAS Web App 網址（只需改這一行）
-const GAS_EXEC_URL = 'https://script.google.com/macros/s/AKfycbxB-245zLp8XHyT1d18U3wZdTNAVgjE4Gm6C7S5R-KtDEKfC-RVFKMPgcVGLXK3lefKyg/exec'
+const GAS_EXEC_URL = 'https://script.google.com/macros/s/AKfycby2HuzieZLCTveJXnwenTmXhh1K_-YVKkNkIqx4skBfpW2V0ziCS9iPqSiWzImNLOCwbQ/exec'
 
 export default defineConfig({
   plugins: [react()],
