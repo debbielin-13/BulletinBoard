@@ -7,16 +7,15 @@ import PostCard from './PostCard'
 
 export default function BoardShell() {
   const [theme, setTheme] = useState<ThemeKey>('office')
-  const [posts, setPosts] = useState<Post[]>(initialPosts)
+  const [latestPost, setLatestPost] = useState<Post | null>(initialPosts[0] ?? null)
+  const [historyPosts, setHistoryPosts] = useState<Post[]>(initialPosts.slice(1))
 
   const { className, title } = themeMap[theme]
 
   function handlePublish(post: Post) {
-    setPosts(prev => [post, ...prev])
+    setHistoryPosts(prev => latestPost ? [latestPost, ...prev] : prev)
+    setLatestPost(post)
   }
-
-  const latestPost = posts[0]
-  const historyPosts = posts.slice(1)
 
   return (
     <section className={`board-shell ${className}`}>
