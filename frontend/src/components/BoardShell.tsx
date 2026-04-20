@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { ThemeKey, Post } from '../types'
 import { themeMap } from '../data/themes'
-import { initialPosts } from '../data/initialPosts'
-import { getLatestPost } from '../api'
+import { getLatestPost, getHistory } from '../api'
 import Composer from './Composer'
 import PostCard from './PostCard'
 
@@ -11,7 +10,9 @@ export default function BoardShell() {
   const [latestPost, setLatestPost] = useState<Post | null>(null)
   const [latestLoading, setLatestLoading] = useState(true)
   const [latestError, setLatestError] = useState<string | null>(null)
-  const [historyPosts, setHistoryPosts] = useState<Post[]>(initialPosts.slice(1))
+  const [historyPosts, setHistoryPosts] = useState<Post[]>([])
+  const [historyLoading, setHistoryLoading] = useState(true)
+  const [historyError, setHistoryError] = useState<string | null>(null)
 
   const { className, title } = themeMap[theme]
 
@@ -20,6 +21,11 @@ export default function BoardShell() {
       .then(post => setLatestPost(post))
       .catch(err => setLatestError(err instanceof Error ? err.message : '載入失敗'))
       .finally(() => setLatestLoading(false))
+
+    getHistory()
+      .then(posts => setHistoryPosts(posts))
+      .catch(err => setHistoryError(err instanceof Error ? err.message : '載入失敗'))
+      .finally(() => setHistoryLoading(false))
   }, [])
 
   function handlePublish(post: Post) {
@@ -67,7 +73,11 @@ export default function BoardShell() {
 
         <div className="section-title">歷史訊息</div>
         <div className="history-area">
-          {historyPosts.length > 0 ? (
+          {historyLoading ? (
+            <div className="empty">載入中…</div>
+          ) : historyError ? (
+            <div className="empty">載入失敗：{historyError}</div>
+          ) : historyPosts.length > 0 ? (
             historyPosts.map((post, i) => <PostCard key={i} post={post} />)
           ) : (
             <div className="empty">目前沒有歷史訊息。</div>
