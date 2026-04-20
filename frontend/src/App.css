@@ -57,6 +57,27 @@
   opacity: 0.85;
 }
 
+/* ── Topbar Tools（計數徽章 + 主題切換） ── */
+.topbar-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.post-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  backdrop-filter: blur(6px);
+}
+
 /* ── Theme Switcher ── */
 .theme-switcher {
   display: flex;
@@ -276,7 +297,8 @@
   border: 6px solid #93c5fd;
 }
 
-.theme-office .theme-switcher {
+.theme-office .theme-switcher,
+.theme-office .post-count-badge {
   background: rgba(255,255,255,0.72);
   color: #1e3a8a;
 }
@@ -316,7 +338,8 @@
   color: #fef6d8;
 }
 
-.theme-classroom .theme-switcher {
+.theme-classroom .theme-switcher,
+.theme-classroom .post-count-badge {
   background: rgba(255,248,220,0.12);
   color: #fff6d5;
 }
@@ -367,7 +390,8 @@
   border: 6px solid #b6cad6;
 }
 
-.theme-fridge .theme-switcher {
+.theme-fridge .theme-switcher,
+.theme-fridge .post-count-badge {
   background: rgba(255,255,255,0.65);
   color: #31556a;
 }

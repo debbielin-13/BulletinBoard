@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { ThemeKey, Post } from '../types'
 import { themeMap } from '../data/themes'
-import { getLatestPost, getHistory } from '../api'
+import { getLatestPost, getHistory, getCount } from '../api'
 import Composer from './Composer'
 import PostCard from './PostCard'
 
@@ -13,8 +13,20 @@ export default function BoardShell() {
   const [historyPosts, setHistoryPosts] = useState<Post[]>([])
   const [historyLoading, setHistoryLoading] = useState(true)
   const [historyError, setHistoryError] = useState<string | null>(null)
+  const [count, setCount] = useState<number | null>(null)
+  const [countLoading, setCountLoading] = useState(true)
+  const [countError, setCountError] = useState<string | null>(null)
 
   const { className, title } = themeMap[theme]
+
+  function loadCount() {
+    setCountLoading(true)
+    setCountError(null)
+    getCount()
+      .then(c => setCount(c))
+      .catch(err => setCountError(err instanceof Error ? err.message : '載入失敗'))
+      .finally(() => setCountLoading(false))
+  }
 
   useEffect(() => {
     getLatestPost()
@@ -26,11 +38,14 @@ export default function BoardShell() {
       .then(posts => setHistoryPosts(posts))
       .catch(err => setHistoryError(err instanceof Error ? err.message : '載入失敗'))
       .finally(() => setHistoryLoading(false))
+
+    loadCount()
   }, [])
 
   function handlePublish(post: Post) {
     setHistoryPosts(prev => latestPost ? [latestPost, ...prev] : prev)
     setLatestPost(post)
+    loadCount()
   }
 
   return (
@@ -41,17 +56,23 @@ export default function BoardShell() {
           <div className="board-subtitle">最新公告會固定顯示在最上方，方便快速查看</div>
         </div>
 
-        <div className="theme-switcher">
-          <label htmlFor="themeSelect">風格</label>
-          <select
-            id="themeSelect"
-            value={theme}
-            onChange={e => setTheme(e.target.value as ThemeKey)}
-          >
-            <option value="office">辦公室</option>
-            <option value="classroom">教室</option>
-            <option value="fridge">冰箱</option>
-          </select>
+        <div className="topbar-tools">
+          <div className="post-count-badge">
+            📌 {countLoading ? '載入中…' : countError ? '載入失敗' : `共 ${count} 則公告`}
+          </div>
+
+          <div className="theme-switcher">
+            <label htmlFor="themeSelect">風格</label>
+            <select
+              id="themeSelect"
+              value={theme}
+              onChange={e => setTheme(e.target.value as ThemeKey)}
+            >
+              <option value="office">辦公室</option>
+              <option value="classroom">教室</option>
+              <option value="fridge">冰箱</option>
+            </select>
+          </div>
         </div>
       </div>
 
