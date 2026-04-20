@@ -43,14 +43,13 @@ export async function createPost(payload: {
   return json.data!
 }
 
-// ── 取得最新公告（GET） ─── TODO：留給同仁實作 ───────────────
+// ── 取得最新公告（GET） ──────────────────────────────────────
 
 export async function getLatestPost(): Promise<Post | null> {
-  // TODO:
-  // const res = await fetch(`${API_ENDPOINT}?action=latest`)
-  // const json: ApiResponse<Post> = await res.json()
-  // return json.data ?? null
-  throw new Error('尚未實作')
+  const res = await fetch(`${API_ENDPOINT}?action=latest`)
+  const json: ApiResponse<Post> = await res.json()
+  if (!json.success) throw new Error(json.error ?? '取得最新公告失敗')
+  return json.data ?? null
 }
 
 // ── 取得歷史訊息（GET） ─── TODO：留給同仁實作 ───────────────

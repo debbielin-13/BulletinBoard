@@ -1,16 +1,26 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ThemeKey, Post } from '../types'
 import { themeMap } from '../data/themes'
 import { initialPosts } from '../data/initialPosts'
+import { getLatestPost } from '../api'
 import Composer from './Composer'
 import PostCard from './PostCard'
 
 export default function BoardShell() {
   const [theme, setTheme] = useState<ThemeKey>('office')
-  const [latestPost, setLatestPost] = useState<Post | null>(initialPosts[0] ?? null)
+  const [latestPost, setLatestPost] = useState<Post | null>(null)
+  const [latestLoading, setLatestLoading] = useState(true)
+  const [latestError, setLatestError] = useState<string | null>(null)
   const [historyPosts, setHistoryPosts] = useState<Post[]>(initialPosts.slice(1))
 
   const { className, title } = themeMap[theme]
+
+  useEffect(() => {
+    getLatestPost()
+      .then(post => setLatestPost(post))
+      .catch(err => setLatestError(err instanceof Error ? err.message : '載入失敗'))
+      .finally(() => setLatestLoading(false))
+  }, [])
 
   function handlePublish(post: Post) {
     setHistoryPosts(prev => latestPost ? [latestPost, ...prev] : prev)
@@ -44,7 +54,11 @@ export default function BoardShell() {
       <div className="sections">
         <div className="section-title">最新公告</div>
         <div className="latest-area">
-          {latestPost ? (
+          {latestLoading ? (
+            <div className="empty">載入中…</div>
+          ) : latestError ? (
+            <div className="empty">載入失敗：{latestError}</div>
+          ) : latestPost ? (
             <PostCard post={latestPost} isLatest />
           ) : (
             <div className="empty">目前沒有公告。</div>
