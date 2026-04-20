@@ -4,6 +4,7 @@ import { themeMap } from '../data/themes'
 import { getLatestPost, getHistory, getCount } from '../api'
 import Composer from './Composer'
 import PostCard from './PostCard'
+import SearchPanel from './SearchPanel'
 
 export default function BoardShell() {
   const [theme, setTheme] = useState<ThemeKey>('office')
@@ -75,6 +76,8 @@ export default function BoardShell() {
           </div>
         </div>
       </div>
+
+      <SearchPanel />
 
       <Composer onPublish={handlePublish} />
 

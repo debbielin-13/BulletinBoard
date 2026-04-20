@@ -69,3 +69,12 @@ export async function getCount(): Promise<number> {
   if (!json.success) throw new Error(json.error ?? '取得公告總數失敗')
   return json.data?.count ?? 0
 }
+
+// ── 搜尋公告（GET） ──────────────────────────────────────────
+
+export async function searchPosts(q: string): Promise<Post[]> {
+  const res = await fetch(`${API_ENDPOINT}?action=search&q=${encodeURIComponent(q)}`)
+  const json: ApiResponse<Post[]> = await res.json()
+  if (!json.success) throw new Error(json.error ?? '搜尋失敗')
+  return json.data ?? []
+}

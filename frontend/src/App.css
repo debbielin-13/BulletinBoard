@@ -218,6 +218,62 @@
   opacity: 0.95;
 }
 
+/* ── Search Panel ── */
+.search-panel {
+  margin-bottom: 22px;
+  position: relative;
+  z-index: 2;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.search-input {
+  flex: 1;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-size: 15px;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.92);
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: rgba(37, 99, 235, 0.45);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.search-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 11px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.search-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.search-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.search-results {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
 /* ── Posts ── */
 .sections {
   position: relative;
@@ -309,7 +365,8 @@
 }
 
 .theme-office .toggle-btn,
-.theme-office .publish-btn {
+.theme-office .publish-btn,
+.theme-office .search-btn {
   background: #2563eb;
   color: #fff;
 }
@@ -350,9 +407,15 @@
 }
 
 .theme-classroom .toggle-btn,
-.theme-classroom .publish-btn {
+.theme-classroom .publish-btn,
+.theme-classroom .search-btn {
   background: #f59e0b;
   color: #3b240b;
+}
+
+.theme-classroom .search-input {
+  background: rgba(255, 250, 237, 0.96);
+  color: #2d2d2d;
 }
 
 .theme-classroom .composer-panel {
@@ -402,7 +465,8 @@
 }
 
 .theme-fridge .toggle-btn,
-.theme-fridge .publish-btn {
+.theme-fridge .publish-btn,
+.theme-fridge .search-btn {
   background: #3b82f6;
   color: white;
 }
